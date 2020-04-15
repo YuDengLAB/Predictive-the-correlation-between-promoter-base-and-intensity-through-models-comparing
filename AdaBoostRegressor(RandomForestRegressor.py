@@ -23,7 +23,7 @@ def load_data(filename):
             line = h.strip().split(',')
 #
             x_l = [math.log(float(line[0]), 10)]
-            for a in line[1]: #将序列编码
+            for a in line[1]: 
                 if a == 'A':
                     x_l.append(1)
                 if a == 'G':
@@ -50,14 +50,14 @@ def f_1(x, A, B):
 
 for i in range(20):
     train_feat, train_id = load_data('data.csv')
-    normalized_test_data = (train_feat - np.mean(train_feat) / np.std(train_feat)) #标准化数据
-    X_train, X_test, y_train, y_test = train_test_split(normalized_test_data, train_id, test_size=0.4, random_state=0) #分割数据集
+    normalized_test_data = (train_feat - np.mean(train_feat) / np.std(train_feat)) 
+    X_train, X_test, y_train, y_test = train_test_split(normalized_test_data, train_id, test_size=0.4, random_state=0) 
 
     regr = AdaBoostRegressor(RandomForestRegressor(random_state=5, n_estimators = 40))
     regr.fit(X_train, y_train)
     pred = regr.predict(X_test)
     pred2 = regr.predict(X_train)
-    score = r2_score(y_test, pred)  # R2相关系数
+    score = r2_score(y_test, pred) 
     score2 = r2_score(y_train[:1000], pred2[:1000])
     print(score, score2)
     plt.rc('font', family='Times New Roman')
