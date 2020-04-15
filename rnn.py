@@ -24,7 +24,6 @@ def get_train_data(batch_size=60, time_step=76, train_begin=0, train_end=2500):
         train_x.append(x)
         train_y.append(y)
         # print (train_y)
-    # train_y = np.reshape(train_y, [-1, 76, 1])
     train_x = np.reshape(train_x, [-1, 76, 32])
 
     batch_index.append(len(data_train))
@@ -32,7 +31,6 @@ def get_train_data(batch_size=60, time_step=76, train_begin=0, train_end=2500):
     return batch_index, train_x, train_y
 def get_test_data(time_step=76, test_begin=2500):
     data_test = data_feat[test_begin:]
-    # normalized_test_data = (data_test - np.mean(data_test)) / np.std(data_test) 
     test_x, test_y = [], []
     l = 3000
     for i in range(len(data_test)):
@@ -40,7 +38,6 @@ def get_test_data(time_step=76, test_begin=2500):
         test_x.append(data_test[i])
         test_y.append(y)
         l += 1
-    # test_y = np.reshape(test_y, [-1, 76, 1])
     test_x = np.reshape(test_x, [-1, 76, 32])
     return test_x, test_y
 
@@ -89,7 +86,6 @@ for i in range(time_step, batch_size*time_step+1):
     if i % 76 == 0:
         predo.append(pred[i-1])
 
-# print(pred)
 loss = tf.losses.huber_loss(Y, predo)
 train_op = tf.train.GradientDescentOptimizer(lr).minimize(loss)
 saver = tf.train.Saver(tf.global_variables(), max_to_keep=15)
@@ -99,12 +95,9 @@ with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     for i in range(500):
         for step in range(len(batch_index) - 1):
-            # print(train_x)
             _, loss_, oo = sess.run([train_op, loss, predo], feed_dict={X: train_x[batch_index[step]:batch_index[step + 1]],
                                                                                     Y: train_y[batch_index[step]:batch_index[step + 1]],
                                                                                     keep_prob: 1})
-            # print(len(oo))
-            # exit()
             pred_ = sess.run([pred], feed_dict={X: test_x,
                                                 Y: test_y, keep_prob: 1})
 
@@ -112,21 +105,7 @@ with tf.Session() as sess:
             for t in range(time_step, time_step*len(test_y)+1):
                 if t % 76 == 0:
                     pred__.append(pred_[0][t-1])
-        # print(len(pred__))
-        # print(len(test_y))
-        # test_y_ = []
-        # for p in test_y:
-        #     for k in p:
-        #         test_y_.append(float(k))
-        #
-        # for q in pred_:
-        #     for t in q:
-        #         pred__.append(float(t))
-        #
             score = r2_score(test_y, pred__)
-        # if i % 100 == 0:
-        #     print(pred__)
-        #     print(test_y_)
 
             print("Number of iterations:", i, " loss:", loss_, "score:", score)
     print("The train has finished")
