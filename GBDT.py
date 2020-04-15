@@ -19,8 +19,8 @@ def load_data(filename):
 
             x_l = [math.log(float(line[0]), 10)]
             # print(len(line[1]))
-            #对目标值取log对数
-            for a in line[1]: #将序列编码
+
+            for a in line[1]: 
                 if a == 'A':
                     x_l.append(6)
                 if a == 'G':
@@ -48,18 +48,17 @@ def load_data(filename):
 def f_1(x, A, B):
     return A * x + B
 
-
 for i in range(50):
     params = {'n_estimators': 1000, 'max_depth': 2, 'min_samples_split': 2,
-              'learning_rate': 0.05, 'loss': 'ls'} #GBDT模型参数，可以通过调整参数提升模型性能
+              'learning_rate': 0.05, 'loss': 'ls'} 
     train_feat, train_id = load_data('train0.csv')
-    normalized_test_data = (train_feat - np.mean(train_feat) / np.std(train_feat)) #标准化数据
-    X_train, X_test, y_train, y_test = train_test_split(normalized_test_data, train_id, test_size=0.1, random_state=0) #分割数据集
+    normalized_test_data = (train_feat - np.mean(train_feat) / np.std(train_feat)) 
+    X_train, X_test, y_train, y_test = train_test_split(normalized_test_data, train_id, test_size=0.1, random_state=0) 
     clf = ensemble.GradientBoostingRegressor(**params)
     clf.fit(X_train, y_train)
     pred = clf.predict(X_test)
     pred2 = clf.predict(X_train)
-    score = r2_score(y_test, pred) #R2相关系数
+    score = r2_score(y_test, pred) 
     score2 = r2_score(y_train[:1000], pred2[:1000])
     print(score)
     plt.rc('font', family='Times New Roman')
