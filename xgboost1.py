@@ -26,7 +26,7 @@ def load_data(filename):
             line = h.strip().split(',')
 #
             x_l = [math.log(float(line[0]), 10)]
-            for a in line[1]: #将序列编码
+            for a in line[1]:
                 if a == 'A':
                     x_l.append(1)
                 if a == 'G':
@@ -56,11 +56,11 @@ if __name__ == '__main__':
     score_list = [0]
     for i in range(10):
         train_feat, train_id = load_data('data.csv')
-        normalized_test_data = (train_feat - np.mean(train_feat) / np.std(train_feat)) #标准化数据
-        cv_params = {'n_estimators': [10,30,50,100,200, 300], 'learning_rate': [0.1, 0.15, 0.08], 'max_depth': [3, 4, 5, 6, 7]} #设置一些参数用来搜索最优参数
+        normalized_test_data = (train_feat - np.mean(train_feat) / np.std(train_feat)) 
+        cv_params = {'n_estimators': [10,30,50,100,200, 300], 'learning_rate': [0.1, 0.15, 0.08], 'max_depth': [3, 4, 5, 6, 7]} 
         other_params = {'learning_rate': 0.1, 'n_estimators': 500, 'max_depth': 5, 'min_child_weight': 1, 'seed': 0,
                         'subsample': 0.8, 'colsample_bytree': 0.8, 'reg_lambda': 1}
-        X_train, X_test, y_train, y_test = train_test_split(normalized_test_data, train_id, test_size=0.1, random_state=0) #分割数据集
+        X_train, X_test, y_train, y_test = train_test_split(normalized_test_data, train_id, test_size=0.1, random_state=0)
 
         model = xgb.XGBRegressor(**other_params)
 
@@ -68,16 +68,12 @@ if __name__ == '__main__':
         optimized_GBM.fit(X_train, y_train)
         pred = optimized_GBM.predict(X_test)
         pred2 = optimized_GBM.predict(X_train)
-        score = r2_score(y_test, pred)  # R2相关系数
+        score = r2_score(y_test, pred) 
         if score >= max(score_list):
             joblib.dump(optimized_GBM, 'best.pkl')
         score_list.append(score)
         score2 = r2_score(y_train[:1000], pred2[:1000])
         print(score, score2)
-        # evalute_result = optimized_GBM.grid_scores_
-        # print('每轮迭代运行结果:{0}'.format(evalute_result))
-        # print('参数的最佳取值：{0}'.format(optimized_GBM.best_params_))
-        # print('最佳模型得分:{0}'.format(optimized_GBM.best_score_))
         plt.rc('font', family='Times New Roman')
         plt.figure()
         A1, B1 = optimize.curve_fit(f_1, y_test, pred)[0]
