@@ -43,7 +43,6 @@ def load_data(filename):
     for t in data:
         train_feat.append(t[1:])
         train_id.append(t[0])
-        #print(train_id)
     train_feat = np.array(train_feat)
     train_id = np.array(train_id)
     return train_feat, train_id
