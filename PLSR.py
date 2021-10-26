@@ -1,11 +1,10 @@
 import numpy as np
-from sklearn.ensemble import GradientBoostingRegressor
 import math
 from sklearn.metrics import r2_score
 import random
-from sklearn import ensemble
 from sklearn.model_selection import train_test_split
 from sklearn.cross_decomposition import PLSRegression
+
 
 def load_data(filename):
     train_feat = []
@@ -17,8 +16,7 @@ def load_data(filename):
             line = h.strip().split(',')
 
             x_l = [math.log(float(line[0]), 10)]
-            #对目标值取log对数
-            for a in line[1]: #将序列编码
+            for a in line[1]:
                 if a == 'A':
                     x_l.append(6)
                 if a == 'G':
@@ -46,10 +44,10 @@ def load_data(filename):
 
 for i in range(50):
     train_feat, train_id = load_data('train0.csv')
-    normalized_test_data = (train_feat - np.mean(train_feat) / np.std(train_feat)) #标准化数据
-    X_train, X_test, y_train, y_test = train_test_split(normalized_test_data, train_id, test_size=0.1, random_state=0) #分割数据集
-    pls2 = PLSRegression(n_components=12,max_iter=500)
+    normalized_test_data = (train_feat - np.mean(train_feat) / np.std(train_feat))
+    X_train, X_test, y_train, y_test = train_test_split(normalized_test_data, train_id, test_size=0.1, random_state=0)
+    pls2 = PLSRegression(n_components=12, max_iter=500)
     pls2.fit(X_train, y_train)
     pred = pls2.predict(X_test)
-    score = r2_score(y_test, pred) #R2相关系数
+    score = r2_score(y_test, pred)
     print(score)

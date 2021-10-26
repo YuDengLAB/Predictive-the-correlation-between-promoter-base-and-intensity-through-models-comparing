@@ -12,7 +12,7 @@ def load_data(filename):
         for h in file:
             line = h.strip().split(',')
             x_l = []
-            for a in line[0]: #将序列编码
+            for a in line[0]:
                 if a == 'A':
                     x_l.append(1)
                 if a == 'G':

@@ -1,20 +1,14 @@
 import numpy as np
-from sklearn.ensemble import GradientBoostingRegressor
 import math
 from sklearn.metrics import r2_score
 import random
-from sklearn import ensemble
 from sklearn.model_selection import train_test_split
-import pandas as pd
 import xgboost as xgb
-from sklearn import preprocessing
-from sklearn import metrics
-from sklearn.preprocessing import Imputer
-from  sklearn.model_selection import GridSearchCV
-from hyperopt import hp
+from sklearn.model_selection import GridSearchCV
 import matplotlib.pyplot as plt
 from scipy import optimize
 from sklearn.externals import joblib
+
 
 def load_data(filename):
     train_feat = []
@@ -24,7 +18,7 @@ def load_data(filename):
         file = f.readlines()
         for h in file:
             line = h.strip().split(',')
-#
+            #
             x_l = [math.log(float(line[0]), 10)]
             for a in line[1]:
                 if a == 'A':
@@ -51,15 +45,18 @@ def load_data(filename):
 def f_1(x, A, B):
     return A * x + B
 
+
 if __name__ == '__main__':
     score_list = [0]
     for i in range(10):
         train_feat, train_id = load_data('data.csv')
-        normalized_test_data = (train_feat - np.mean(train_feat) / np.std(train_feat)) 
-        cv_params = {'n_estimators': [10,30,50,100,200, 300], 'learning_rate': [0.1, 0.15, 0.08], 'max_depth': [3, 4, 5, 6, 7]} 
+        normalized_test_data = (train_feat - np.mean(train_feat) / np.std(train_feat))
+        cv_params = {'n_estimators': [10, 30, 50, 100, 200, 300], 'learning_rate': [0.1, 0.15, 0.08],
+                     'max_depth': [3, 4, 5, 6, 7]}
         other_params = {'learning_rate': 0.1, 'n_estimators': 500, 'max_depth': 5, 'min_child_weight': 1, 'seed': 0,
                         'subsample': 0.8, 'colsample_bytree': 0.8, 'reg_lambda': 1}
-        X_train, X_test, y_train, y_test = train_test_split(normalized_test_data, train_id, test_size=0.1, random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(normalized_test_data, train_id, test_size=0.1,
+                                                            random_state=0)
 
         model = xgb.XGBRegressor(**other_params)
 
@@ -67,7 +64,7 @@ if __name__ == '__main__':
         optimized_GBM.fit(X_train, y_train)
         pred = optimized_GBM.predict(X_test)
         pred2 = optimized_GBM.predict(X_train)
-        score = r2_score(y_test, pred) 
+        score = r2_score(y_test, pred)
         if score >= max(score_list):
             joblib.dump(optimized_GBM, 'best.pkl')
         score_list.append(score)
@@ -88,5 +85,3 @@ if __name__ == '__main__':
         plt.ylabel('Predict')
         plt.legend()
         plt.savefig(str(i) + '.pdf')
-
-

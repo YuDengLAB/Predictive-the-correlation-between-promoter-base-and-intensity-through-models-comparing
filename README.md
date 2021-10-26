@@ -1,1 +1,0 @@
-# Predictive-the-correlation-between-promoter-base-and-intensity-through-models-comparing

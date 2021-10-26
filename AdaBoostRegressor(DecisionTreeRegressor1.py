@@ -1,16 +1,12 @@
 import numpy as np
-from sklearn.ensemble import GradientBoostingRegressor
 import math
 from sklearn.metrics import r2_score
 import random
-from sklearn import ensemble
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import AdaBoostRegressor
 import matplotlib.pyplot as plt
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.datasets import make_regression
-from sklearn.cross_decomposition import PLSRegression
+
 
 def load_data(filename):
     train_feat = []
@@ -20,7 +16,7 @@ def load_data(filename):
         file = f.readlines()
         for h in file:
             line = h.strip().split(',')
-#
+            #
             x_l = [math.log(float(line[0]), 10)]
             for a in line[1]:
                 if a == 'A':
@@ -39,10 +35,10 @@ def load_data(filename):
     for t in data:
         train_feat.append(t[1:])
         train_id.append(t[0])
-        #print(train_id)
     train_feat = np.array(train_feat)
     train_id = np.array(train_id)
     return train_feat, train_id
+
 
 for i in range(20):
     train_feat, train_id = load_data('train0930q.csv')
@@ -51,17 +47,14 @@ for i in range(20):
 
     regr = AdaBoostRegressor(DecisionTreeRegressor())
 
-
     regr.fit(X_train, y_train)
     pred = regr.predict(X_test)
 
-    score = r2_score(y_test, pred) 
+    score = r2_score(y_test, pred)
     print(score)
     plt.figure()
-    plt.scatter(y_test, pred, s=5,c="k", label="boost0930")
+    plt.scatter(y_test, pred, s=5, c="k", label="boost0930")
     plt.xlabel("test_state0")
     plt.ylabel("pred_state0")
     plt.legend()
     plt.show()
-
-
