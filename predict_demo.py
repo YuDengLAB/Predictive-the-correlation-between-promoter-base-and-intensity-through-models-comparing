@@ -1,7 +1,7 @@
 import numpy as np
 import random
 import pandas as pd
-from sklearn.externals import joblib
+import joblib
 
 
 def load_data(filename):
@@ -12,7 +12,7 @@ def load_data(filename):
         for h in file:
             line = h.strip().split(',')
             x_l = []
-            for a in line[0]:
+            for a in line[0]: #将序列编码
                 if a == 'A':
                     x_l.append(1)
                 if a == 'G':
@@ -49,9 +49,9 @@ def load_data(filename):
     return train_feat, train_origin
 
 
-train_feat, train_origin = load_data('12.7.csv')
+train_feat, train_origin = load_data('predict_file.csv')
 normalized_test_data = (train_feat - np.mean(train_feat) / np.std(train_feat))
-clf = joblib.load("best_0.79.pkl")
+clf = joblib.load("best.pkl")
 pred = clf.predict(normalized_test_data)
 result = []
 for i in pred:
